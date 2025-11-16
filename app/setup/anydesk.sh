@@ -1,24 +1,20 @@
 #!/bin/bash
 set -e
 
-echo "===== 安装 AnyDesk ====="
+ARCH=$(dpkg --print-architecture)
+ANYDESK_VER="6.3.2-1"
+URL="https://download.anydesk.com/linux/anydesk_${ANYDESK_VER}_${ARCH}.deb"
 
-# 更新软件源并安装依赖
+echo "===== 安装 AnyDesk v${ANYDESK_VER} (${ARCH}) ====="
+
+# 安装依赖
 apt-get update
-apt-get install -y --no-install-recommends \
-    wget \
-    gnupg \
-    ca-certificates
+apt-get install -y --no-install-recommends wget gnupg ca-certificates libgtk2.0-0 libx11-6 libxcb1
 
-# 导入 AnyDesk 公钥到 trusted keyring
-wget -O- https://keys.anydesk.com/repos/DEB-GPG-KEY | gpg --dearmor > /usr/share/keyrings/anydesk.gpg
-
-# 添加 AnyDesk 官方仓库，并指定使用该 key
-echo "deb [signed-by=/usr/share/keyrings/anydesk.gpg] http://deb.anydesk.com/ all main" > /etc/apt/sources.list.d/anydesk.list
-
-# 更新软件源并安装 AnyDesk
-apt-get update
-apt-get install -y --no-install-recommends anydesk
+# 下载并安装 .deb
+wget -O /tmp/anydesk.deb "$URL"
+dpkg -i /tmp/anydesk.deb || apt-get install -f -y
+rm -f /tmp/anydesk.deb
 
 # 清理缓存
 apt-get clean
