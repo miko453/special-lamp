@@ -8,12 +8,13 @@ apt-get update
 apt-get install -y --no-install-recommends \
     wget \
     gnupg \
-    apt-transport-https \
     ca-certificates
 
-# 添加 AnyDesk 官方仓库并导入公钥
-wget -qO - https://keys.anydesk.com/repos/DEB-GPG-KEY | apt-key add -
-echo "deb http://deb.anydesk.com/ all main" > /etc/apt/sources.list.d/anydesk.list
+# 导入 AnyDesk 公钥到 trusted keyring
+wget -O- https://keys.anydesk.com/repos/DEB-GPG-KEY | gpg --dearmor > /usr/share/keyrings/anydesk.gpg
+
+# 添加 AnyDesk 官方仓库，并指定使用该 key
+echo "deb [signed-by=/usr/share/keyrings/anydesk.gpg] http://deb.anydesk.com/ all main" > /etc/apt/sources.list.d/anydesk.list
 
 # 更新软件源并安装 AnyDesk
 apt-get update
