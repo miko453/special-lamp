@@ -1,30 +1,43 @@
 #!/bin/bash
 set -e
 
-echo "===== 开始安装 XFCE4 GUI 环境 ====="
-
+echo "===== 更新 apt 源 ====="
 apt-get update
 
+echo "===== 安装 XFCE4 桌面和 VNC 及完整依赖 ====="
 apt-get install -y --no-install-recommends \
     xfce4 \
     xfce4-session \
     xfce4-goodies \
     xfce4-terminal \
-    policykit-1 \
+    xfce4-panel \
+    xfce4-settings \
+    xfce4-power-manager \
+    xfce4-appfinder \
     dbus-x11 \
-    tigervnc-standalone-server \
-    tigervnc-tools \
     x11-xserver-utils \
     xdg-utils \
     exo-utils \
+    gtk2-engines-murrine \
+    gtk2-engines-pixbuf \
     fonts-noto-cjk \
     fonts-wqy-zenhei \
-    fonts-noto-color-emoji
+    fonts-noto-color-emoji \
+    wget curl git nano htop tree procps locales \
+    tigervnc-standalone-server \
+    tigervnc-tools \
+    mesa-utils \
+    pulseaudio pulseaudio-utils
 
-echo "===== XFCE4 + VNC 所需组件安装完毕 ====="
+# Polkit 相关
+# Kali 2025.4 已用 polkitd 替代 policykit-1
+if apt-cache show polkitd >/dev/null 2>&1; then
+    echo "安装 polkitd"
+    apt-get install -y polkitd
+fi
 
-# 防止 XFCE 报错：配套运行目录（不启动，只创建）
-mkdir -p /tmp/xdg
-chmod 700 /tmp/xdg
+# 清理缓存
+apt-get clean
+rm -rf /var/lib/apt/lists/*
 
-echo "===== 安装脚本执行完成（纯安装，无启动） ====="
+echo "===== XFCE4 桌面和 VNC 安装完成 ====="
