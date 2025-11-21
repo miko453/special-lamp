@@ -1,19 +1,30 @@
 #!/bin/bash
 set -e
 
-echo "===== 安装 XFCE4 桌面和 VNC 组件 ====="
+echo "===== 开始安装 XFCE4 GUI 环境 ====="
+
 apt-get update
+
 apt-get install -y --no-install-recommends \
     xfce4 \
+    xfce4-session \
     xfce4-goodies \
-    terminator \
+    xfce4-terminal \
+    policykit-1 \
+    dbus-x11 \
     tigervnc-standalone-server \
     tigervnc-tools \
-    dbus-x11 \
     x11-xserver-utils \
-    fonts-noto-color-emoji \
+    xdg-utils \
+    exo-utils \
     fonts-noto-cjk \
-    fonts-wqy-zenhei
+    fonts-wqy-zenhei \
+    fonts-noto-color-emoji
 
-echo "===== GUI 模块安装完成 ====="
+echo "===== XFCE4 + VNC 所需组件安装完毕 ====="
 
+# 防止 XFCE 报错：配套运行目录（不启动，只创建）
+mkdir -p /tmp/xdg
+chmod 700 /tmp/xdg
+
+echo "===== 安装脚本执行完成（纯安装，无启动） ====="
